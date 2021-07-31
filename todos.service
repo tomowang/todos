@@ -1,0 +1,16 @@
+[Unit]
+Wants=network-online.target
+After=network.target network-online.target
+Description=todos
+
+[Service]
+EnvironmentFile=/opt/tomodev/todos/.env
+Type=forking
+WorkingDirectory=/opt/tomodev/todos
+ExecStart=/opt/tomodev/todos/todos.sh start
+ExecStop=/opt/tomodev/todos/todos.sh stop
+ExecReload=/opt/tomodev/todos/todos.sh restart
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

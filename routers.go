@@ -8,16 +8,30 @@ import (
 	"todos/controllers"
 	"todos/middleware"
 
+	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/requestid"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
 func NewRouter() *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
 	c := config.GetConfig()
 	store := cookie.NewStore([]byte(c.Security.CookieSecret))
 	router.Use(sessions.Sessions("session", store))
+	router.Use(requestid.New())
+	router.Use(middleware.JSONLogMiddleware())
+	// CORS for all
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+	router.Use(gin.Recovery())
 
 	router.GET("/health", func(c *gin.Context) {
 		c.String(http.StatusOK, fmt.Sprintf("%d", time.Now().Unix()))
