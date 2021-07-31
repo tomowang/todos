@@ -1,0 +1,219 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is a sample todo
+  version: "1.0.0"
+  title: todos
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/tomowang/todos/1.0.0
+  - url: 'https://todos.tomo.wang/v1'
+paths:
+  /register:
+    post:
+      summary: register user
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserForm"
+      responses:
+        '200':
+          description: register success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+  /login:
+    post:
+      summary: login user
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserForm"
+      responses:
+        '200':
+          description: login success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+  /logout:
+    post:
+      summary: logout user
+      operationId: logout
+      responses:
+        '200':
+          description: logout success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    
+  /profile:
+    get:
+      summary: get user profile
+      operationId: profile
+      responses:
+        '200':
+          description: get profile success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  user:
+                    $ref: "#/components/schemas/User"
+  /todos:
+    get:
+      summary: get todos
+      responses:
+        '200': 
+          description: get todos success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  user:
+                    $ref: "#/components/schemas/Todo"
+    post:
+      summary: create todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoForm"
+      responses:
+        "201":
+          description: create todo success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/Todo"
+  "/todos/{id}":
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: retrive one todo
+      responses:
+        "200":
+          description: retrive one todo success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/Todo"
+    put:
+      summary: update one todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoForm"
+      responses:
+        "200":
+          description: update todo success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+    delete:
+      summary: delete one todo
+      responses:
+        "200":
+          description: delete todo success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+components:
+  schemas:
+    UserForm:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+          format: email
+        created_at:
+          type: integer
+          format: int64
+        updated_at:
+          type: integer
+          format: int64
+    TodoForm:
+      type: object
+      properties:
+        content:
+          type: string
+        status:
+          type: integer
+    Todo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        content:
+          type: string
+        status:
+          type: integer
+        created_at:
+          type: integer
+          format: int64
+        updated_at:
+          type: integer
+          format: int64
