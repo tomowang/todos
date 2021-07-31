@@ -30,13 +30,25 @@ func (s *TodoService) Create(todo *core.Todo) error {
 	return nil
 }
 
-func (s *TodoService) Retrieve(id uint) (*core.Todo, error) {
-	log.Debug().Uint("id", id).Msg("todo.Retrieve")
+func (s *TodoService) Retrieve(id, userID uint) (*core.Todo, error) {
+	log.Debug().Uint("id", id).Uint("user_id", userID).Msg("todo.Retrieve")
 	db := database.GetDB()
 	todo := core.Todo{}
-	if err := db.First(&todo, id).Error; err != nil {
+	if err := db.Where("user_id = ?", userID).First(&todo, id).Error; err != nil {
 		return nil, err
 	} else {
 		return &todo, nil
 	}
+}
+
+func (s *TodoService) Update(todo *core.Todo) error {
+	log.Debug().Msg("todo.Update")
+	db := database.GetDB()
+	return db.Save(todo).Error
+}
+
+func (s *TodoService) Destroy(todo *core.Todo) error {
+	log.Debug().Msg("todo.Destroy")
+	db := database.GetDB()
+	return db.Delete(todo).Error
 }

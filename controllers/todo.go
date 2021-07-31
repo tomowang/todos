@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"todos/core"
 	"todos/services"
 
@@ -33,8 +34,56 @@ func (ctrl *TodosController) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"status": 0, "data": todo})
 }
 
-func (ctrl *TodosController) Retrieve(c *gin.Context) {}
+func (ctrl *TodosController) Retrieve(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": 1})
+		return
+	}
+	user := sessions.Default(c).Get(core.UserSessionKey).(core.User)
+	if todo, err := todoService.Retrieve(uint(id), user.ID); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": 1})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"status": 0, "data": todo})
+	}
+}
 
-func (ctrl *TodosController) Update(c *gin.Context) {}
+func (ctrl *TodosController) Update(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": 1})
+		return
+	}
+	user := sessions.Default(c).Get(core.UserSessionKey).(core.User)
+	if todo, err := todoService.Retrieve(uint(id), user.ID); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": 1})
+	} else {
+		payload := &core.Todo{}
+		c.BindJSON(payload)
+		todo.Content = payload.Content
+		todo.Status = payload.Status
+		if e := todoService.Update(todo); e != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"status": 1, "message": e.Error()})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"status": 0})
+		}
+	}
+}
 
-func (ctrl *TodosController) Destroy(c *gin.Context) {}
+func (ctrl *TodosController) Destroy(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": 1})
+		return
+	}
+	user := sessions.Default(c).Get(core.UserSessionKey).(core.User)
+	if todo, err := todoService.Retrieve(uint(id), user.ID); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": 1})
+	} else {
+		if e := todoService.Destroy(todo); e != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"status": 1, "message": e.Error()})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"status": 0})
+		}
+	}
+}

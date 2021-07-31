@@ -39,6 +39,10 @@ func NewRouter() *gin.Engine {
 		todos := private.Group("todos")
 		todos.GET("", todosCtrl.List)
 		todos.POST("", todosCtrl.Create)
+
+		todos.GET("/:id", todosCtrl.Retrieve)
+		todos.PUT("/:id", todosCtrl.Update)
+		todos.DELETE("/:id", todosCtrl.Destroy)
 	}
 	return router
 }
