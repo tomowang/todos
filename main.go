@@ -21,7 +21,7 @@ func main() {
 	var validate bool
 	flag.BoolVar(&validate, "validate", false, "parse the config toml and exit")
 	flag.Parse()
-	err = config.Init("")
+	err = config.Init()
 	if err != nil {
 		log.Fatal().Err(err).Str("filename", flag.Arg(0)).Msg("read config error")
 	}
@@ -33,7 +33,7 @@ func main() {
 	conf := config.GetConfig()
 	if log.IsTerminal(os.Stderr.Fd()) {
 		log.DefaultLogger = log.Logger{
-			Level:      log.ParseLevel(conf.Log.Level),
+			Level:      log.ParseLevel(conf.LogLevel),
 			Caller:     1,
 			TimeFormat: "15:04:05",
 			Writer: &log.ConsoleWriter{
@@ -42,11 +42,11 @@ func main() {
 		}
 	} else {
 		log.DefaultLogger = log.Logger{
-			Level: log.ParseLevel(conf.Log.Level),
+			Level: log.ParseLevel(conf.LogLevel),
 			Writer: &log.FileWriter{
 				Filename:   executable + ".log",
-				MaxSize:    conf.Log.Maxsize,
-				MaxBackups: conf.Log.Backups,
+				MaxSize:    conf.LogMaxsize,
+				MaxBackups: conf.LogBackups,
 				LocalTime:  false,
 			},
 		}
@@ -59,5 +59,5 @@ func main() {
 	db.Init()
 	c := config.GetConfig()
 	router := NewRouter()
-	router.Run(c.Listen.TCP)
+	router.Run(c.Listen)
 }

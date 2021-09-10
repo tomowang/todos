@@ -18,7 +18,7 @@ import (
 func NewRouter() *gin.Engine {
 	router := gin.New()
 	c := config.GetConfig()
-	store := cookie.NewStore([]byte(c.Security.CookieSecret))
+	store := cookie.NewStore([]byte(c.CookieSecret))
 	router.Use(sessions.Sessions("session", store))
 	router.Use(requestid.New())
 	router.Use(middleware.JSONLogMiddleware())

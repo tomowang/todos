@@ -3,6 +3,9 @@ module todos
 go 1.16
 
 require (
+	github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6 // indirect
+	github.com/coreos/etcd v3.3.10+incompatible // indirect
+	github.com/coreos/go-etcd v2.0.0+incompatible // indirect
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/requestid v0.0.1
 	github.com/gin-contrib/sessions v0.0.3
@@ -19,10 +22,13 @@ require (
 	github.com/naoina/toml v0.1.1
 	github.com/phuslu/log v1.0.74
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/spf13/viper v1.8.1 // indirect
 	github.com/ugorji/go v1.2.6 // indirect
+	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gorm.io/driver/postgres v1.1.0 // indirect
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.21.12
 )
