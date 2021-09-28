@@ -27,7 +27,7 @@ func Init() (err error) {
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 
-	viper.SetDefault("LISTEN", "127.0.0.1:8000")
+	viper.SetDefault("LISTEN", "0.0.0.0:8000")
 	viper.SetDefault("GIN_MODE", "debug")
 	viper.SetDefault("LOG_LEVEL", "DEBUG")
 	viper.SetDefault("LOG_MAX_SIZE", 2147483648)
