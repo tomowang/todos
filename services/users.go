@@ -33,7 +33,7 @@ func (s *UserService) GetUserByEmail(email string) (*core.User, error) {
 func (s *UserService) CreateUser(email, rawPassword string) error {
 	db := database.GetDB()
 	password, _ := HashPassword(rawPassword)
-	log.Info().Str("email", email).Str("password", password).Msg("CreateUser")
+	log.Info().Str("email", email).Str("password", "******").Msg("CreateUser")
 	user := &core.User{Email: email, Password: password}
 	return db.Create(user).Error
 }

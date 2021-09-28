@@ -27,7 +27,11 @@ func (ctrl *TodosController) List(c *gin.Context) {
 
 func (ctrl *TodosController) Create(c *gin.Context) {
 	todo := &core.Todo{}
-	c.BindJSON(todo)
+	err := c.ShouldBindJSON(todo)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 1, "message": "Bad request"})
+		return
+	}
 	user := sessions.Default(c).Get(core.UserSessionKey).(core.User)
 	todo.UserID = user.ID
 	todoService.Create(todo)
@@ -59,7 +63,11 @@ func (ctrl *TodosController) Update(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"status": 1})
 	} else {
 		payload := &core.Todo{}
-		c.BindJSON(payload)
+		err := c.ShouldBindJSON(todo)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"status": 1, "message": "Bad request"})
+			return
+		}
 		todo.Content = payload.Content
 		todo.Status = payload.Status
 		if e := todoService.Update(todo); e != nil {
